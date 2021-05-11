@@ -234,6 +234,7 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `;
 
+/*
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName,
 })<{ isActive?: boolean }>`
@@ -264,6 +265,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
       display: none;
 `}
 `;
+*/
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: "Rinkeby",
