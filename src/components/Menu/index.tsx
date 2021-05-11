@@ -80,7 +80,7 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const CODE_LINK = 'https://github.com/cheeseswapbsc/'
+const CODE_LINK = 'https://github.com/thirmprotocol'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
@@ -89,34 +89,13 @@ export default function Menu() {
   useOnClickOutside(node, open ? toggle : undefined)
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://keep3rb.network/">
-            <Lock size={14} />
-            KP3RB
-          </MenuItem>
-          <MenuItem id="link" href="https://kiwiswap.finance/">
-            <DollarSign size={14} />
-            Kiwi🥝
-          </MenuItem>
-          <MenuItem id="link" href="https://pizzafinance.app/">
-            <Star size={14} />
-            Pizza🍕
-          </MenuItem>
-          <MenuItem id="link" href="https://farm.cheeseswap.app/">
-            <Sunrise size={14} />
-            Farm
-          </MenuItem>
-          <MenuItem id="link" href="https://info.cheeseswap.app/">
-            <PieChart size={14} />
-            Chart
-          </MenuItem>
-          <MenuItem id="link" href="https://t.me/cheesemakerfarm">
+          <MenuItem id="link" href="https://t.me/thirm">
             <MessageCircle size={14} />
             Telegram
           </MenuItem>
