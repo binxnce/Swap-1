@@ -3,8 +3,8 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 
 // import { bsc, fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 import { injected, bsc, walletconnect } from '../connectors'
-// TODO
-export const ROUTER_ADDRESS = '0x88D1B153d6e41051745E524641E5B95Ed46A5B86'
+
+export const ROUTER_ADDRESS = '0x4a9b79F317a69712139DfDA4a8f08029980Bd3D8'
 
 // a list of tokens by chain
 type ChainTokenList = {
