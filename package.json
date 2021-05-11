@@ -1,6 +1,6 @@
 {
-  "name": "@cheeswap/interface",
-  "description": "CheeseSwap Interface",
+  "name": "thirmswap-interface",
+  "description": "thirmswap Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {

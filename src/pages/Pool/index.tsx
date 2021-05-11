@@ -6,9 +6,8 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import Question from '../../components/QuestionHelper'
 import FullPositionCard from '../../components/PositionCard'
-import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { StyledInternalLink, TYPE } from '../../components/Shared'
+import { TYPE } from '../../components/Shared'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
@@ -56,8 +55,6 @@ export default function Pool() {
 
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
-  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
-
   return (
     <>
       <AppBody>
@@ -98,8 +95,8 @@ export default function Pool() {
               <>
                 {allV2PairsWithLiquidity.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
-                ))}  
-                </>
+                ))}
+              </>
             ) : (
               <LightCard padding="40px">
                 <TYPE.body color={theme.colors.text3} textAlign="center">
@@ -107,15 +104,6 @@ export default function Pool() {
                 </TYPE.body>
               </LightCard>
             )}
-
-            <div>
-              <Text textAlign="center" fontSize={16} style={{ padding: '.5rem 0 .5rem 0' }}>
-                {hasV1Liquidity ? 'Cheeseswap V1 liquidity found!' : TranslateString(106, "Don't see a pool you joined?")}{' '}
-                <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
-                  {hasV1Liquidity ? 'Migrate now.' : TranslateString(108, 'Import it.')}
-                </StyledInternalLink>
-              </Text>
-            </div>
           </AutoColumn>
         </AutoColumn>
       </AppBody>
