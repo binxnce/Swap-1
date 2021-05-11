@@ -6,7 +6,7 @@ export default {
     ...base.colors,
     shadow1: '#1B2637',
     text1: '#FFFFFF',
-    text2: '#27ae60',
+    text2: '#218c74',
     text3: '#888D9B',
     text4: '#fff',
 
@@ -15,7 +15,7 @@ export default {
     bg1: '#231520',
     bg2: '#231520',
     bg3: '#382E35',
-    bg4: '#27ae60',
+    bg4: '#706fd3',
     bg5: '#1B2637',
     bg6: 'linear-gradient(193.68deg,#2a1926 0.68%,#1f121c 100.48%)',
 
@@ -24,9 +24,9 @@ export default {
     advancedBG: 'rgba(35,30,39,0.5)',
 
     //primary colors
-    primary1: '#27ae60',
+    primary1: '#706fd3',
     primary4: '#903079',
-    primary5: '#27ae60',
+    primary5: '#706fd3',
     primary6: '#261823',
 
     // color text
