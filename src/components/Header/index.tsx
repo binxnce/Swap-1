@@ -17,7 +17,7 @@ import {
 } from "../../state/wallet/hooks";
 import { CardNoise } from "../earn/styled";
 import { CountUp } from "use-count-up";
-import { TYPE, ExternalLink } from "../../theme";
+import { TYPE } from "../../theme";
 
 import { YellowCard } from "../Card";
 import Settings from "../Settings";
