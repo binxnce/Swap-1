@@ -1,10 +1,10 @@
-import { Trade, TradeType } from '@uniswap/sdk'
+import { Trade, TradeType } from '@cheeseswap/cheeseswap-sdk'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
-import { TYPE } from '../../theme'
+import { TYPE } from '../Shared'
 import {
   computeSlippageAdjustedAmounts,
   computeTradePriceBreakdown,
@@ -44,13 +44,13 @@ export default function SwapModalFooter({
     <>
       <AutoColumn gap="0px">
         <RowBetween align="center">
-          <Text fontWeight={400} fontSize={14} color={theme.text2}>
+          <Text fontWeight={600} fontSize={14} color={theme.colors.text2}>
             Price
           </Text>
           <Text
-            fontWeight={500}
+            fontWeight={700}
             fontSize={14}
-            color={theme.text1}
+            color={theme.colors.text1}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -61,14 +61,14 @@ export default function SwapModalFooter({
           >
             {formatExecutionPrice(trade, showInverted)}
             <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-              <Repeat size={14} />
+              <Repeat size={16} />
             </StyledBalanceMaxMini>
           </Text>
         </RowBetween>
 
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={600} color={theme.colors.text2}>
               {trade.tradeType === TradeType.EXACT_INPUT ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
@@ -88,7 +88,7 @@ export default function SwapModalFooter({
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black color={theme.text2} fontSize={14} fontWeight={400}>
+            <TYPE.black color={theme.colors.text2} fontSize={14} fontWeight={600}>
               Price Impact
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and your price due to trade size." />
@@ -97,10 +97,10 @@ export default function SwapModalFooter({
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={600} color={theme.colors.text2}>
               Liquidity Provider Fee
             </TYPE.black>
-            <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
+            <QuestionHelper text="For each trade a 0.2% fee is paid. 0.17% goes to liquidity providers and 0.03% goes to the CheeseSwap treasury." />
           </RowFixed>
           <TYPE.black fontSize={14}>
             {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol : '-'}
@@ -116,7 +116,7 @@ export default function SwapModalFooter({
           style={{ margin: '10px 0 0 0' }}
           id="confirm-swap-or-send"
         >
-          <Text fontSize={20} fontWeight={500}>
+          <Text fontSize={18} fontWeight={700}>
             {severity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
           </Text>
         </ButtonError>

@@ -1,18 +1,14 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import { Lock, Code, PieChart, MessageCircle, DollarSign, Sunrise, Star } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
-import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleModal } from '../../state/application/hooks'
-
-import { ExternalLink } from '../../theme'
-import { ButtonPrimary } from '../Button'
+import useToggle from '../../hooks/useToggle'
+import { ExternalLink } from '../Shared'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.colors.text1};
   }
 `
 
@@ -23,8 +19,8 @@ const StyledMenuButton = styled.button`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
+  height: 36px;
+  background-color: ${({ theme }) => theme.colors.bg3};
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -33,11 +29,11 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg4};
+    background-color: ${({ theme }) => theme.colors.bg4};
   }
 
   svg {
-    margin-top: 2px;
+    margin-top: 3px;
   }
 `
 
@@ -53,30 +49,29 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span`
   min-width: 8.125rem;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.colors.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  border: 2px solid ${({ theme }) => theme.colors.bg3};
+  border-radius: 0.5rem;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 4rem;
+  top: 3rem;
   right: 0rem;
   z-index: 100;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -17.25rem;
-  `};
 `
 
 const MenuItem = styled(ExternalLink)`
   flex: 1;
+  display: flex;
+  align-items: center;
   padding: 0.5rem 0.5rem;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.colors.text1};
   :hover {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.colors.text2};
     cursor: pointer;
     text-decoration: none;
   }
@@ -85,16 +80,13 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
+const CODE_LINK = 'https://github.com/cheeseswapbsc/'
 
 export default function Menu() {
-  const { account } = useActiveWeb3React()
-
   const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.MENU)
-  const toggle = useToggleModal(ApplicationModal.MENU)
+  const [open, toggle] = useToggle(false)
+
   useOnClickOutside(node, open ? toggle : undefined)
-  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
@@ -102,34 +94,36 @@ export default function Menu() {
       <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
-
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
-            <Info size={14} />
-            About
+          <MenuItem id="link" href="https://keep3rb.network/">
+            <Lock size={14} />
+            KP3RB
           </MenuItem>
-          <MenuItem id="link" href="https://uniswap.org/docs/v2">
-            <BookOpen size={14} />
-            Docs
+          <MenuItem id="link" href="https://kiwiswap.finance/">
+            <DollarSign size={14} />
+            Kiwi🥝
+          </MenuItem>
+          <MenuItem id="link" href="https://pizzafinance.app/">
+            <Star size={14} />
+            Pizza🍕
+          </MenuItem>
+          <MenuItem id="link" href="https://farm.cheeseswap.app/">
+            <Sunrise size={14} />
+            Farm
+          </MenuItem>
+          <MenuItem id="link" href="https://info.cheeseswap.app/">
+            <PieChart size={14} />
+            Chart
+          </MenuItem>
+          <MenuItem id="link" href="https://t.me/cheesemakerfarm">
+            <MessageCircle size={14} />
+            Telegram
           </MenuItem>
           <MenuItem id="link" href={CODE_LINK}>
             <Code size={14} />
             Code
           </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/FCfyBSbCU5">
-            <MessageCircle size={14} />
-            Discord
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
-            <PieChart size={14} />
-            Analytics
-          </MenuItem>
-          {account && (
-            <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              Claim UNI
-            </ButtonPrimary>
-          )}
         </MenuFlyout>
       )}
     </StyledMenu>

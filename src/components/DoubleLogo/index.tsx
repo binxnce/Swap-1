@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk'
+import { Currency } from '@cheeseswap/cheeseswap-sdk'
 import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
@@ -22,7 +22,7 @@ const HigherLogo = styled(CurrencyLogo)`
 `
 const CoveredLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
   position: absolute;
-  left: ${({ sizeraw }) => '-' + (sizeraw / 2).toString() + 'px'} !important;
+  left: ${({ sizeraw }) => (sizeraw / 2).toString() + 'px'};
 `
 
 export default function DoubleCurrencyLogo({

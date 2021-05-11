@@ -1,11 +1,11 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@cheeseswap/cheeseswap-sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../../components/Button'
 import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
-import { TYPE } from '../../theme'
+import { TYPE } from '../../components/Shared'
 
 export function ConfirmAddModalBottom({
   noLiquidity,
@@ -58,7 +58,7 @@ export function ConfirmAddModalBottom({
         <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
-        <Text fontWeight={500} fontSize={20}>
+        <Text fontWeight={700} fontSize={20}>
           {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
         </Text>
       </ButtonPrimary>

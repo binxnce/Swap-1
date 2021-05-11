@@ -12,7 +12,7 @@ import Transaction from './Transaction'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis, bsc } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -20,13 +20,13 @@ import PortisIcon from '../../assets/images/portisIcon.png'
 import Identicon from '../Identicon'
 import { ButtonSecondary } from '../Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
-import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { ExternalLink, LinkStyledButton, TYPE } from '../Shared'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
-  font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
+  font-weight: 700;
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.colors.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -39,7 +39,7 @@ const UpperSection = styled.div`
     margin: 0;
     margin-bottom: 0.5rem;
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 600;
   }
 
   h5:last-child {
@@ -48,13 +48,13 @@ const UpperSection = styled.div`
 
   h4 {
     margin-top: 0;
-    font-weight: 500;
+    font-weight: 700;
   }
 `
 
 const InfoCard = styled.div`
   padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 2px solid ${({ theme }) => theme.colors.bg3};
   border-radius: 20px;
   position: relative;
   display: grid;
@@ -66,8 +66,8 @@ const AccountGroupingRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   justify-content: space-between;
   align-items: center;
-  font-weight: 400;
-  color: ${({ theme }) => theme.text1};
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text1};
 
   div {
     ${({ theme }) => theme.flexRowNoWrap}
@@ -76,7 +76,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.colors.bg1};
   padding: 0rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
@@ -84,12 +84,12 @@ const AccountSection = styled.div`
 const YourAccount = styled.div`
   h5 {
     margin: 0 0 1rem 0;
-    font-weight: 400;
+    font-weight: 600;
   }
 
   h4 {
     margin: 0;
-    font-weight: 500;
+    font-weight: 700;
   }
 `
 
@@ -98,14 +98,14 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg2};
-  border-bottom-left-radius: 20px;
+  background-color: ${({ theme }) => theme.colors.bg2};
+  border-bottom-left-radius: 25px;
   border-bottom-right-radius: 20px;
 
   h5 {
     margin: 0;
-    font-weight: 400;
-    color: ${({ theme }) => theme.text3};
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.text3};
   }
 `
 
@@ -115,7 +115,7 @@ const AccountControl = styled.div`
   min-width: 0;
   width: 100%;
 
-  font-weight: 500;
+  font-weight: 700;
   font-size: 1.25rem;
 
   a:hover {
@@ -133,12 +133,12 @@ const AccountControl = styled.div`
 
 const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
   font-size: 0.825rem;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.colors.text3};
   margin-left: 1rem;
   font-size: 0.825rem;
   display: flex;
   :hover {
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme }) => theme.colors.text2};
   }
 `
 
@@ -154,15 +154,15 @@ const CloseIcon = styled.div`
 
 const CloseColor = styled(Close)`
   path {
-    stroke: ${({ theme }) => theme.text4};
+    stroke: ${({ theme }) => theme.colors.text4};
   }
 `
 
 const WalletName = styled.div`
   width: initial;
   font-size: 0.825rem;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text3};
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text3};
 `
 
 const IconWrapper = styled.div<{ size?: number }>`
@@ -186,7 +186,7 @@ const TransactionListWrapper = styled.div`
 
 const WalletAction = styled(ButtonSecondary)`
   width: fit-content;
-  font-weight: 400;
+  font-weight: 600;
   margin-left: 8px;
   font-size: 0.825rem;
   padding: 4px 6px;
@@ -197,7 +197,7 @@ const WalletAction = styled(ButtonSecondary)`
 `
 
 const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.colors.primary1};
 `
 
 function renderTransactions(transactions: string[]) {
@@ -302,9 +302,9 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && connector !== walletlink && (
+                  {connector !== injected && connector !== walletlink && connector !== bsc && (
                     <WalletAction
-                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                      style={{ fontSize: '.825rem', fontWeight: 600, marginRight: '8px' }}
                       onClick={() => {
                         ;(connector as any).close()
                       }}
@@ -313,7 +313,7 @@ export default function AccountDetails({
                     </WalletAction>
                   )}
                   <WalletAction
-                    style={{ fontSize: '.825rem', fontWeight: 400 }}
+                    style={{ fontSize: '.825rem', fontWeight: 600 }}
                     onClick={() => {
                       openOptions()
                     }}
@@ -358,7 +358,7 @@ export default function AccountDetails({
                             href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>View on bscscan</span>
                           </AddressLink>
                         )}
                       </div>
@@ -380,7 +380,7 @@ export default function AccountDetails({
                             href={getEtherscanLink(chainId, account, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>View on bscscan</span>
                           </AddressLink>
                         )}
                       </div>
@@ -403,7 +403,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
+          <TYPE.body color={theme.colors.text1}>Your transactions will appear here...</TYPE.body>
         </LowerSection>
       )}
     </>

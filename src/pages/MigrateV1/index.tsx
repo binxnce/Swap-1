@@ -1,4 +1,4 @@
-import { JSBI, Token } from '@uniswap/sdk'
+import { JSBI, Token } from '@cheeseswap/cheeseswap-sdk'
 import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
@@ -7,8 +7,9 @@ import { SearchInput } from '../../components/SearchModal/styleds'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
+import { useSelectedTokenList } from '../../state/lists/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { BackArrow, TYPE } from '../../theme'
+import { BackArrow, TYPE } from '../../components/Shared'
 import { LightCard } from '../../components/Card'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
@@ -17,7 +18,6 @@ import QuestionHelper from '../../components/QuestionHelper'
 import { Dots } from '../../components/swap/styleds'
 import { useAddUserToken } from '../../state/user/hooks'
 import { isTokenOnList } from '../../utils'
-import { useCombinedActiveList } from '../../state/lists/hooks'
 
 export default function MigrateV1() {
   const theme = useContext(ThemeContext)
@@ -28,7 +28,7 @@ export default function MigrateV1() {
 
   // automatically add the search token
   const token = useToken(tokenSearch)
-  const selectedTokenListTokens = useCombinedActiveList()
+  const selectedTokenListTokens = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token ?? undefined)
   const allTokens = useAllTokens()
   const addToken = useAddUserToken()
@@ -77,20 +77,20 @@ export default function MigrateV1() {
           </div>
         </AutoRow>
 
-        <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
+        <TYPE.body style={{ marginBottom: 8, fontWeight: 600 }}>
           For each pool shown below, click migrate to remove your liquidity from Uniswap V1 and deposit it into Uniswap
           V2.
         </TYPE.body>
 
         {!account ? (
           <LightCard padding="40px">
-            <TYPE.body color={theme.text3} textAlign="center">
+            <TYPE.body color={theme.colors.text3} textAlign="center">
               Connect to a wallet to view your V1 liquidity.
             </TYPE.body>
           </LightCard>
         ) : isLoading ? (
           <LightCard padding="40px">
-            <TYPE.body color={theme.text3} textAlign="center">
+            <TYPE.body color={theme.colors.text3} textAlign="center">
               <Dots>Loading</Dots>
             </TYPE.body>
           </LightCard>

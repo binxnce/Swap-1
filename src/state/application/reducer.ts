@@ -1,18 +1,27 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
-import { addPopup, PopupContent, removePopup, updateBlockNumber, ApplicationModal, setOpenModal } from './actions'
+import {
+  addPopup,
+  PopupContent,
+  removePopup,
+  toggleWalletModal,
+  toggleSettingsMenu,
+  updateBlockNumber
+} from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
-  readonly blockNumber: { readonly [chainId: number]: number }
-  readonly popupList: PopupList
-  readonly openModal: ApplicationModal | null
+  blockNumber: { [chainId: number]: number }
+  popupList: PopupList
+  walletModalOpen: boolean
+  settingsMenuOpen: boolean
 }
 
 const initialState: ApplicationState = {
   blockNumber: {},
   popupList: [],
-  openModal: null
+  walletModalOpen: false,
+  settingsMenuOpen: false
 }
 
 export default createReducer(initialState, builder =>
@@ -25,8 +34,11 @@ export default createReducer(initialState, builder =>
         state.blockNumber[chainId] = Math.max(blockNumber, state.blockNumber[chainId])
       }
     })
-    .addCase(setOpenModal, (state, action) => {
-      state.openModal = action.payload
+    .addCase(toggleWalletModal, state => {
+      state.walletModalOpen = !state.walletModalOpen
+    })
+    .addCase(toggleSettingsMenu, state => {
+      state.settingsMenuOpen = !state.settingsMenuOpen
     })
     .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 15000 } }) => {
       state.popupList = (key ? state.popupList.filter(popup => popup.key !== key) : state.popupList).concat([

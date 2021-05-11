@@ -1,24 +1,23 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import React, { useEffect, useState } from 'react'
-import { isMobile } from 'react-device-detect'
+import React, { useState, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
-import MetamaskIcon from '../../assets/images/metamask.png'
-import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis } from '../../connectors'
-import { OVERLAY_READY } from '../../connectors/Fortmatic'
-import { SUPPORTED_WALLETS } from '../../constants'
+import { isMobile } from 'react-device-detect'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import usePrevious from '../../hooks/usePrevious'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
-import AccountDetails from '../AccountDetails'
+import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 
 import Modal from '../Modal'
-import Option from './Option'
+import AccountDetails from '../AccountDetails'
 import PendingView from './PendingView'
+import Option from './Option'
+import { SUPPORTED_WALLETS } from '../../constants'
+import { ExternalLink } from '../Shared'
+import MetamaskIcon from '../../assets/images/metamask.png'
+import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { injected, fortmatic, portis } from '../../connectors'
+import { OVERLAY_READY } from '../../connectors/Fortmatic'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -32,7 +31,7 @@ const CloseIcon = styled.div`
 
 const CloseColor = styled(Close)`
   path {
-    stroke: ${({ theme }) => theme.text4};
+    stroke: ${({ theme }) => theme.colors.text4};
   }
 `
 
@@ -46,15 +45,15 @@ const Wrapper = styled.div`
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
-  font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
+  font-weight: 700;
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.colors.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.colors.bg2};
   padding: 2rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -69,7 +68,7 @@ const UpperSection = styled.div`
     margin: 0;
     margin-bottom: 0.5rem;
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 600;
   }
 
   h5:last-child {
@@ -78,7 +77,7 @@ const UpperSection = styled.div`
 
   h4 {
     margin-top: 0;
-    font-weight: 500;
+    font-weight: 700;
   }
 `
 
@@ -134,7 +133,7 @@ export default function WalletModal({
 
   const [pendingError, setPendingError] = useState<boolean>()
 
-  const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
+  const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
 
   const previousAccount = usePrevious(account)
@@ -298,7 +297,10 @@ export default function WalletModal({
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
+              <h5>
+                Please connect to the appropriate Binance Smart Chain network.
+                <a href="https://docs.binance.org/smart-chain/wallet/metamask.html">How?</a>
+              </h5>
             ) : (
               'Error connecting. Try refreshing the page.'
             )}
@@ -351,8 +353,10 @@ export default function WalletModal({
           )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
+              <span>New to BSC? &nbsp;</span>{' '}
+              <ExternalLink href="https://docs.binance.org/smart-chain/wallet/metamask.html">
+                Learn more about wallets
+              </ExternalLink>
             </Blurb>
           )}
         </ContentWrapper>

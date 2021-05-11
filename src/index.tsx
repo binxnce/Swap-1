@@ -5,24 +5,25 @@ import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
-import Blocklist from './components/Blocklist'
+import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { NetworkContextName } from './constants'
 import './i18n'
 import App from './pages/App'
 import store from './state'
+import { useIsDarkMode } from './state/user/hooks'
 import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
-import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
+import { lightTheme, darkTheme } from './theme'
+import { FixedGlobalStyle, ThemedGlobalStyle } from './components/Shared'
 import getLibrary from './utils/getLibrary'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-if (!!window.ethereum) {
-  window.ethereum.autoRefreshOnNetworkChange = false
+if ('ethereum' in window) {
+  ;(window.ethereum as any).autoRefreshOnNetworkChange = false
 }
 
 const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
@@ -36,6 +37,7 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 }
 
 window.addEventListener('error', error => {
+  localStorage && localStorage.removeItem('redux_localstorage_simple_lists')
   ReactGA.exception({
     description: `${error.message} @ ${error.filename}:${error.lineno}:${error.colno}`,
     fatal: true
@@ -54,22 +56,25 @@ function Updaters() {
   )
 }
 
+function ThemeProvider({ children }: { children?: React.ReactNode }) {
+  const isDark = useIsDarkMode()
+  const theme = isDark ? darkTheme : lightTheme
+
+  return <StyledThemeProvider theme={theme}>{children}</StyledThemeProvider>
+}
+
 ReactDOM.render(
   <StrictMode>
     <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
-        <Blocklist>
-          <Provider store={store}>
-            <Updaters />
-            <ThemeProvider>
-              <ThemedGlobalStyle />
-              <HashRouter>
-                <App />
-              </HashRouter>
-            </ThemeProvider>
-          </Provider>
-        </Blocklist>
+        <Provider store={store}>
+          <Updaters />
+          <ThemeProvider>
+            <ThemedGlobalStyle />
+            <App />
+          </ThemeProvider>
+        </Provider>
       </Web3ProviderNetwork>
     </Web3ReactProvider>
   </StrictMode>,

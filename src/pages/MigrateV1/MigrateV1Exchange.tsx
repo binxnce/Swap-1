@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { AddressZero } from '@ethersproject/constants'
-import { Currency, CurrencyAmount, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@cheeseswap/cheeseswap-sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -9,7 +9,6 @@ import { ButtonConfirmed } from '../../components/Button'
 import { LightCard, PinkCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
@@ -24,16 +23,29 @@ import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useCon
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
 import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
-import { BackArrow, ExternalLink, TYPE } from '../../theme'
+import { BackArrow, ExternalLink, TYPE } from '../../components/Shared'
 import { getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
 
+const POOL_CURRENCY_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
 const ZERO_FRACTION = new Fraction(ZERO, ONE)
 const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(10000 - INITIAL_ALLOWED_SLIPPAGE), JSBI.BigInt(10000))
+
+function FormattedPoolCurrencyAmount({ currencyAmount }: { currencyAmount: CurrencyAmount }) {
+  return (
+    <>
+      {currencyAmount.equalTo(JSBI.BigInt(0))
+        ? '0'
+        : currencyAmount.greaterThan(POOL_CURRENCY_AMOUNT_MIN)
+        ? currencyAmount.toSignificant(4)
+        : `<${POOL_CURRENCY_AMOUNT_MIN.toSignificant(1)}`}
+    </>
+  )
+}
 
 export function V1LiquidityInfo({
   token,
@@ -54,30 +66,30 @@ export function V1LiquidityInfo({
         <CurrencyLogo size="24px" currency={token} />
         <div style={{ marginLeft: '.75rem' }}>
           <TYPE.mediumHeader>
-            {<FormattedCurrencyAmount currencyAmount={liquidityTokenAmount} />}{' '}
+            {<FormattedPoolCurrencyAmount currencyAmount={liquidityTokenAmount} />}{' '}
             {chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH
           </TYPE.mediumHeader>
         </div>
       </AutoRow>
 
       <RowBetween my="1rem">
-        <Text fontSize={16} fontWeight={500}>
+        <Text fontSize={16} fontWeight={700}>
           Pooled {chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}:
         </Text>
         <RowFixed>
-          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+          <Text fontSize={16} fontWeight={700} marginLeft={'6px'}>
             {tokenWorth.toSignificant(4)}
           </Text>
           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={token} />
         </RowFixed>
       </RowBetween>
       <RowBetween mb="1rem">
-        <Text fontSize={16} fontWeight={500}>
+        <Text fontSize={16} fontWeight={700}>
           Pooled ETH:
         </Text>
         <RowFixed>
-          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            <FormattedCurrencyAmount currencyAmount={ethWorth} />
+          <Text fontSize={16} fontWeight={700} marginLeft={'6px'}>
+            <FormattedPoolCurrencyAmount currencyAmount={ethWorth} />
           </Text>
           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={Currency.ETHER} />
         </RowFixed>
@@ -186,7 +198,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
   return (
     <AutoColumn gap="20px">
-      <TYPE.body my={9} style={{ fontWeight: 400 }}>
+      <TYPE.body my={9} style={{ fontWeight: 600 }}>
         This tool will safely migrate your V1 liquidity to V2 with minimal price risk. The process is completely
         trustless thanks to the{' '}
         {chainId && (
@@ -199,7 +211,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
       {!isFirstLiquidityProvider && largePriceDifference ? (
         <YellowCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
+          <TYPE.body style={{ marginBottom: 8, fontWeight: 600 }}>
             It{"'"}s best to deposit liquidity into Uniswap V2 at a price you believe is correct. If the V2 price seems
             incorrect, you can either make a swap to move the price or wait for someone else to do so.
           </TYPE.body>
@@ -240,7 +252,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
       {isFirstLiquidityProvider && (
         <PinkCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
+          <TYPE.body style={{ marginBottom: 8, fontWeight: 600 }}>
             You are the first liquidity provider for this pair on Uniswap V2. Your liquidity will be migrated at the
             current V1 price. Your transaction cost also includes the gas to create the pool.
           </TYPE.body>
@@ -354,7 +366,7 @@ export default function MigrateV1Exchange({
           <TYPE.largeHeader>You must connect an account.</TYPE.largeHeader>
         ) : validatedAddress && chainId && token?.equals(WETH[chainId]) ? (
           <>
-            <TYPE.body my={9} style={{ fontWeight: 400 }}>
+            <TYPE.body my={9} style={{ fontWeight: 600 }}>
               Because Uniswap V2 uses WETH under the hood, your Uniswap V1 WETH/ETH liquidity cannot be migrated. You
               may want to remove your liquidity instead.
             </TYPE.body>

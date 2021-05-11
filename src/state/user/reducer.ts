@@ -13,8 +13,8 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning,
-  updateUserSingleHopOnly
+  muteAudio,
+  unmuteAudio
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -27,8 +27,6 @@ export interface UserState {
   matchesDarkMode: boolean // whether the dark mode media query matches
 
   userExpertMode: boolean
-
-  userSingleHopOnly: boolean // only allow swaps on direct pairs
 
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number
@@ -50,7 +48,8 @@ export interface UserState {
   }
 
   timestamp: number
-  URLWarningVisible: boolean
+
+  audioPlay: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -61,13 +60,12 @@ export const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
-  userSingleHopOnly: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  URLWarningVisible: true
+  audioPlay: true
 }
 
 export default createReducer(initialState, builder =>
@@ -107,9 +105,6 @@ export default createReducer(initialState, builder =>
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateUserSingleHopOnly, (state, action) => {
-      state.userSingleHopOnly = action.payload.userSingleHopOnly
-    })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
       state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
@@ -139,7 +134,10 @@ export default createReducer(initialState, builder =>
       }
       state.timestamp = currentTimestamp()
     })
-    .addCase(toggleURLWarning, state => {
-      state.URLWarningVisible = !state.URLWarningVisible
+    .addCase(muteAudio, state => {
+      state.audioPlay = false
+    })
+    .addCase(unmuteAudio, state => {
+      state.audioPlay = true
     })
 )

@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { JSBI, Token, TokenAmount, WETH, Fraction, Percent, CurrencyAmount } from '@uniswap/sdk'
+import { JSBI, Token, TokenAmount, WETH, Fraction, Percent, CurrencyAmount } from '@cheeseswap/cheeseswap-sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -15,7 +15,7 @@ import { useV1ExchangeContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalance, useETHBalances } from '../../state/wallet/hooks'
-import { BackArrow, TYPE } from '../../theme'
+import { BackArrow, TYPE } from '../../components/Shared'
 import { isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
@@ -95,7 +95,7 @@ function V1PairRemoval({
 
   return (
     <AutoColumn gap="20px">
-      <TYPE.body my={9} style={{ fontWeight: 400 }}>
+      <TYPE.body my={9} style={{ fontWeight: 600 }}>
         This tool will remove your V1 liquidity and send the underlying assets to your wallet.
       </TYPE.body>
 

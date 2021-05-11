@@ -1,11 +1,10 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { animated, useTransition, useSpring } from 'react-spring'
+import { animated, useTransition } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { isMobile } from 'react-device-detect'
 import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
-import { useGesture } from 'react-use-gesture'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -19,7 +18,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
     align-items: center;
     justify-content: center;
 
-    background-color: ${({ theme }) => theme.modalBG};
+    background-color: ${({ theme }) => theme.colors.modalBG};
   }
 `
 
@@ -31,16 +30,14 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 )).attrs({
   'aria-label': 'dialog'
 })`
-  overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
-
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    background-color: ${({ theme }) => theme.bg1};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
+    border: 2px solid ${({ theme }) => theme.colors.bg1};
+    background-color: ${({ theme }) => theme.colors.bg1};
+    box-shadow: -2 4px 8px -1 ${({ theme }) => transparentize(0.95, theme.colors.shadow1)};
     padding: 0px;
     width: 50vw;
-    overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
-    overflow-x: hidden;
+    overflow: hidden;
 
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
 
@@ -87,7 +84,7 @@ export default function Modal({
   isOpen,
   onDismiss,
   minHeight = false,
-  maxHeight = 90,
+  maxHeight = 50,
   initialFocusRef,
   children
 }: ModalProps) {
@@ -98,18 +95,6 @@ export default function Modal({
     leave: { opacity: 0 }
   })
 
-  const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
-  const bind = useGesture({
-    onDrag: state => {
-      set({
-        y: state.down ? state.movement[1] : 0
-      })
-      if (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) {
-        onDismiss()
-      }
-    }
-  })
-
   return (
     <>
       {fadeTransition.map(
@@ -117,12 +102,6 @@ export default function Modal({
           item && (
             <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
               <StyledDialogContent
-                {...(isMobile
-                  ? {
-                      ...bind(),
-                      style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
-                    }
-                  : {})}
                 aria-label="dialog content"
                 minHeight={minHeight}
                 maxHeight={maxHeight}

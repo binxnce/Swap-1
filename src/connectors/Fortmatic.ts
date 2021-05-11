@@ -1,15 +1,13 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainId } from '@cheeseswap/cheeseswap-sdk'
 import { FortmaticConnector as FortmaticConnectorCore } from '@web3-react/fortmatic-connector'
 
 export const OVERLAY_READY = 'OVERLAY_READY'
 
-type FormaticSupportedChains = Extract<ChainId, ChainId.MAINNET | ChainId.ROPSTEN | ChainId.RINKEBY | ChainId.KOVAN>
+type FormaticSupportedChains = Extract<ChainId, ChainId.MAINNET | ChainId.BSCTESTNET>
 
 const CHAIN_ID_NETWORK_ARGUMENT: { readonly [chainId in FormaticSupportedChains]: string | undefined } = {
   [ChainId.MAINNET]: undefined,
-  [ChainId.ROPSTEN]: 'ropsten',
-  [ChainId.RINKEBY]: 'rinkeby',
-  [ChainId.KOVAN]: 'kovan'
+  [ChainId.BSCTESTNET]: 'Bsc-testnet'
 }
 
 export class FortmaticConnector extends FortmaticConnectorCore {
@@ -27,7 +25,7 @@ export class FortmaticConnector extends FortmaticConnectorCore {
 
     const provider = this.fortmatic.getProvider()
 
-    const pollForOverlayReady = new Promise(resolve => {
+    const pollForOverlayReady: Promise<void> = new Promise(resolve => {
       const interval = setInterval(() => {
         if (provider.overlayReady) {
           clearInterval(interval)
