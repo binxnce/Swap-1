@@ -1,20 +1,20 @@
-import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
-import styled from 'styled-components'
-import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
-import { useActiveWeb3React } from '../../hooks'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleModal } from '../../state/application/hooks'
+import React, { useRef } from "react";
+import { BookOpen, GitCommit, Info } from "react-feather";
+import styled from "styled-components";
+import { ReactComponent as MenuIcon } from "../../assets/images/menu.svg";
+import { useActiveWeb3React } from "../../hooks";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
+import { ApplicationModal } from "../../state/application/actions";
+import { useModalOpen, useToggleModal } from "../../state/application/hooks";
 
-import { ExternalLink } from '../../theme'
-import { ButtonPrimary } from '../Button'
+import { ExternalLink } from "../../theme";
+import { ButtonPrimary } from "../Button";
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
     stroke: ${({ theme }) => theme.text1};
   }
-`
+`;
 
 const StyledMenuButton = styled.button`
   width: 100%;
@@ -39,7 +39,7 @@ const StyledMenuButton = styled.button`
   svg {
     margin-top: 2px;
   }
-`
+`;
 
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
@@ -49,13 +49,13 @@ const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
-`
+`;
 
 const MenuFlyout = styled.span`
-  min-width: 8.125rem;
+  min-width: 12.125rem;
   background-color: ${({ theme }) => theme.bg3};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   padding: 0.5rem;
   display: flex;
@@ -69,7 +69,7 @@ const MenuFlyout = styled.span`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     top: -17.25rem;
   `};
-`
+`;
 
 const MenuItem = styled(ExternalLink)`
   flex: 1;
@@ -83,21 +83,18 @@ const MenuItem = styled(ExternalLink)`
   > svg {
     margin-right: 8px;
   }
-`
-
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
+`;
 
 export default function Menu() {
-  const { account } = useActiveWeb3React()
+  const { account } = useActiveWeb3React();
 
-  const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.MENU)
-  const toggle = useToggleModal(ApplicationModal.MENU)
-  useOnClickOutside(node, open ? toggle : undefined)
-  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+  const node = useRef<HTMLDivElement>();
+  const open = useModalOpen(ApplicationModal.MENU);
+  const toggle = useToggleModal(ApplicationModal.MENU);
+  useOnClickOutside(node, open ? toggle : undefined);
+  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM);
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
@@ -105,33 +102,31 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
-            <Info size={14} />
-            About
+          <MenuItem id="link" href="https://bridge.thirm.com/">
+            <GitCommit size={14} />
+            Bridge
           </MenuItem>
-          <MenuItem id="link" href="https://uniswap.org/docs/v2">
+          <MenuItem id="link" href="https://thirm.com/">
+            <Info size={14} />
+            Website
+          </MenuItem>
+          <MenuItem id="link" href="https://docs.thirm.com/">
             <BookOpen size={14} />
             Docs
           </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
-            <Code size={14} />
-            Code
-          </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/EwFs3Pp">
-            <MessageCircle size={14} />
-            Discord
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
-            <PieChart size={14} />
-            Analytics
-          </MenuItem>
           {account && (
-            <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              Claim UNI
+            <ButtonPrimary
+              onClick={openClaimModal}
+              padding="8px 16px"
+              width="100%"
+              borderRadius="12px"
+              mt="0.5rem"
+            >
+              Claim THIRM
             </ButtonPrimary>
           )}
         </MenuFlyout>
       )}
     </StyledMenu>
-  )
+  );
 }
